@@ -1,110 +1,597 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Music Player</title>
-    <style>
-        body {
-            padding: 25px;
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: white;
-        }
-        #playlist {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .song {
-            background: #1e1e1e;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            width: 150px;
-        }
-        .song img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-        }
-        .song button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background: #5C6AC4;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        #audioPlayer {
-            margin-top: 20px;
-            width: 100%;
-        }
-    </style>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Secret Unblocked Listen</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#0d1117;
+color:white;
+overflow-x:hidden;
+}
+
+header{
+position:sticky;
+top:0;
+z-index:100;
+background:#161b22;
+padding:20px;
+box-shadow:0 5px 15px rgba(0,0,0,.3);
+}
+
+header h1{
+font-size:32px;
+margin-bottom:15px;
+}
+
+#search{
+width:100%;
+padding:14px;
+border:none;
+outline:none;
+border-radius:12px;
+background:#21262d;
+color:white;
+font-size:16px;
+}
+
+#playlist{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fill,minmax(180px,1fr));
+
+gap:20px;
+
+padding:25px;
+
+}
+
+.song{
+
+background:#161b22;
+
+border-radius:15px;
+
+overflow:hidden;
+
+transition:.25s;
+
+cursor:pointer;
+
+box-shadow:0 10px 20px rgba(0,0,0,.25);
+
+}
+
+.song:hover{
+
+transform:translateY(-6px);
+
+}
+
+.song img{
+
+width:100%;
+
+aspect-ratio:1;
+
+object-fit:cover;
+
+background:#30363d;
+
+}
+
+.songTitle{
+
+padding:12px;
+
+font-size:16px;
+
+font-weight:bold;
+
+text-align:center;
+
+white-space:nowrap;
+
+overflow:hidden;
+
+text-overflow:ellipsis;
+
+}
+
+.song button{
+
+width:calc(100% - 20px);
+
+margin:0 10px 12px;
+
+padding:10px;
+
+border:none;
+
+border-radius:10px;
+
+background:#238636;
+
+color:white;
+
+font-size:15px;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+.song button:hover{
+
+background:#2ea043;
+
+}
+
+footer{
+
+position:fixed;
+
+left:0;
+
+right:0;
+
+bottom:0;
+
+background:#161b22;
+
+padding:15px;
+
+box-shadow:0 -5px 20px rgba(0,0,0,.3);
+
+}
+
+#nowPlaying{
+
+font-size:15px;
+
+margin-bottom:10px;
+
+font-weight:bold;
+
+}
+
+audio{
+
+width:100%;
+
+}
+
+.controls{
+
+display:flex;
+
+gap:10px;
+
+margin-top:10px;
+
+}
+
+.controls button{
+
+flex:1;
+
+padding:10px;
+
+border:none;
+
+border-radius:10px;
+
+background:#30363d;
+
+color:white;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+.controls button:hover{
+
+background:#484f58;
+
+}
+
+.loading{
+
+padding:50px;
+
+text-align:center;
+
+font-size:20px;
+
+color:#8b949e;
+
+}
+
+.empty{
+
+padding:50px;
+
+text-align:center;
+
+font-size:18px;
+
+color:#8b949e;
+
+}
+
+body{
+
+padding-bottom:180px;
+
+}
+
+</style>
+
 </head>
-<body>
-    <h1>Music Player</h1>
-    <div id="playlist"></div>
-    <audio id="audioPlayer" controls></audio>
-    <script>
-        const repoOwner = 'zacharyceiley-jpg';
-        const repoName = 'secret-Unblocked-Listen';
-        const branch = 'main';
-        const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents?ref=${branch}`;
-        const rawBaseUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/`;
 
-        async function fetchFiles() {
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error(`API error: ${response.status}`);
-                const files = await response.json();
-                const mp3Files = files.filter(file => file.name.endsWith('.mp3')).sort((a, b) => a.name.localeCompare(b.name));
-                const pngFiles = files.filter(file => file.name.endsWith('.png'));
-                displayPlaylist(mp3Files, pngFiles);
-            } catch (error) {
-                console.error('Error fetching files:', error);
-                const playlist = document.getElementById('playlist');
-                playlist.innerHTML = '<p>Error loading songs. Check console for details.</p>';
-            }
-        }
+    <body>
 
-        function displayPlaylist(mp3Files, pngFiles) {
-            const playlist = document.getElementById('playlist');
-            mp3Files.forEach(file => {
-                const songDiv = document.createElement('div');
-                songDiv.className = 'song';
-                
-                const pngFile = pngFiles.find(png => png.name.replace('.png', '') === file.name.replace('.mp3', ''));
-                if (pngFile) {
-                    const img = document.createElement('img');
-                    img.src = rawBaseUrl + pngFile.name;
-                    img.onerror = () => img.style.display = 'none';
-                    songDiv.appendChild(img);
-                }
-                
-                const title = document.createElement('p');
-                title.textContent = file.name.replace('.mp3', '');
-                songDiv.appendChild(title);
-                
-                const playBtn = document.createElement('button');
-                playBtn.textContent = 'Play';
-                playBtn.onclick = () => playSong(file.name);
-                songDiv.appendChild(playBtn);
-                
-                playlist.appendChild(songDiv);
+<header>
+
+<h1>🎵 Secret Unblocked Listen</h1>
+
+<input
+type="text"
+id="search"
+placeholder="Search songs...">
+
+</header>
+
+<div id="playlist">
+
+<div class="loading">
+
+Loading songs...
+
+</div>
+
+</div>
+
+<footer>
+
+<div id="nowPlaying">
+
+Nothing Playing
+
+</div>
+
+<audio
+id="player"
+controls>
+
+</audio>
+
+<div class="controls">
+
+<button id="previousBtn">
+
+⏮ Previous
+
+</button>
+
+<button id="playPauseBtn">
+
+▶ Play / Pause
+
+</button>
+
+<button id="nextBtn">
+
+⏭ Next
+
+</button>
+
+<button id="shuffleBtn">
+
+🔀 Shuffle
+
+</button>
+
+<button id="repeatBtn">
+
+🔁 Repeat Off
+
+</button>
+
+</div>
+
+</footer>
+
+<script>
+
+const repoOwner="zacharyceiley-jpg";
+
+const repoName="secret-Unblocked-Listen";
+
+const branch="main";
+
+const apiUrl=`https://api.github.com/repos/${repoOwner}/${repoName}/contents?ref=${branch}`;
+
+const rawBaseUrl=`https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/`;
+
+let songs=[];
+
+let filteredSongs=[];
+
+let currentIndex=-1;
+
+let repeat=false;
+
+    async function loadSongs(){
+
+    try{
+
+        const response = await fetch(apiUrl,{
+            cache:"no-store"
+        });
+
+        if(!response.ok)
+            throw new Error(response.status);
+
+        const files = await response.json();
+
+        const mp3Files = files.filter(file =>
+            file.name.toLowerCase().endsWith(".mp3")
+        );
+
+        const pngFiles = files.filter(file =>
+            file.name.toLowerCase().endsWith(".png")
+        );
+
+        songs = mp3Files
+            .sort((a,b)=>a.name.localeCompare(b.name))
+            .map(song=>{
+
+                const cover = pngFiles.find(img=>
+                    img.name.replace(/\.png$/i,"") ===
+                    song.name.replace(/\.mp3$/i,"")
+                );
+
+                return{
+
+                    title:song.name.replace(/\.mp3$/i,""),
+
+                    file:song.name,
+
+                    image:cover ? rawBaseUrl+cover.name : null
+
+                };
+
             });
-        }
 
-        function playSong(filename) {
-            const audioPlayer = document.getElementById('audioPlayer');
-            audioPlayer.src = rawBaseUrl + filename;
-            audioPlayer.play().catch(e => console.error('Playback error:', e));
-        }
+        filteredSongs=[...songs];
 
-        fetchFiles();
+        renderSongs();
 
-        <script src="search.js"></script>
-    </script>
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        document.getElementById("playlist").innerHTML=`
+        <div class="empty">
+            Failed to load songs.
+        </div>`;
+
+    }
+
+}
+
+function renderSongs(){
+
+    const playlist=document.getElementById("playlist");
+
+    playlist.innerHTML="";
+
+    if(filteredSongs.length===0){
+
+        playlist.innerHTML=`
+        <div class="empty">
+            No songs found.
+        </div>`;
+
+        return;
+
+    }
+
+    filteredSongs.forEach((song,index)=>{
+
+        const card=document.createElement("div");
+
+        card.className="song";
+
+        card.innerHTML=`
+
+            ${
+            song.image
+            ?
+            `<img src="${song.image}">`
+            :
+            `<img src="https://placehold.co/300x300/222/FFF?text=♪">`
+            }
+
+            <div class="songTitle">
+
+                ${song.title}
+
+            </div>
+
+            <button>
+
+                ▶ Play
+
+            </button>
+
+        `;
+
+        card.querySelector("button").onclick=(e)=>{
+
+            e.stopPropagation();
+
+            playSong(index);
+
+        };
+
+        card.onclick=()=>playSong(index);
+
+        playlist.appendChild(card);
+
+    });
+
+}
+    function playSong(index){
+
+    if(index<0 || index>=filteredSongs.length) return;
+
+    currentIndex=index;
+
+    const song=filteredSongs[index];
+
+    const player=document.getElementById("player");
+
+    player.src=rawBaseUrl+song.file;
+
+    player.play();
+
+    document.getElementById("nowPlaying").textContent=
+        "🎵 Now Playing: "+song.title;
+
+}
+
+document.getElementById("playPauseBtn").onclick=()=>{
+
+    const player=document.getElementById("player");
+
+    if(!player.src) return;
+
+    if(player.paused){
+
+        player.play();
+
+    }else{
+
+        player.pause();
+
+    }
+
+};
+
+document.getElementById("previousBtn").onclick=()=>{
+
+    if(filteredSongs.length===0) return;
+
+    if(currentIndex<=0){
+
+        playSong(filteredSongs.length-1);
+
+    }else{
+
+        playSong(currentIndex-1);
+
+    }
+
+};
+
+document.getElementById("nextBtn").onclick=()=>{
+
+    if(filteredSongs.length===0) return;
+
+    if(currentIndex>=filteredSongs.length-1){
+
+        playSong(0);
+
+    }else{
+
+        playSong(currentIndex+1);
+
+    }
+
+};
+
+document.getElementById("shuffleBtn").onclick=()=>{
+
+    if(filteredSongs.length===0) return;
+
+    const random=Math.floor(Math.random()*filteredSongs.length);
+
+    playSong(random);
+
+};
+
+document.getElementById("repeatBtn").onclick=()=>{
+
+    repeat=!repeat;
+
+    document.getElementById("repeatBtn").textContent=
+        repeat ? "🔁 Repeat On" : "🔁 Repeat Off";
+
+};
+
+document.getElementById("player").addEventListener("ended",()=>{
+
+    if(repeat){
+
+        document.getElementById("player").play();
+
+        return;
+
+    }
+
+    if(filteredSongs.length===0) return;
+
+    if(currentIndex>=filteredSongs.length-1){
+
+        playSong(0);
+
+    }else{
+
+        playSong(currentIndex+1);
+
+    }
+
+});
+    document.getElementById("search").addEventListener("input",(e)=>{
+
+    const text=e.target.value.toLowerCase().trim();
+
+    filteredSongs=songs.filter(song=>
+        song.title.toLowerCase().includes(text)
+    );
+
+    renderSongs();
+
+});
+
+window.addEventListener("load",()=>{
+
+    loadSongs();
+
+});
+
+</script>
+
 </body>
 </html>
